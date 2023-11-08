@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 import UsersHandler from './handlers/users';
 import uploadFileUtil from './utils/uploadFile';
+import CarsHandler from './handlers/cars';
 
 // import dotenv from 'dotenv';
 // import formData from 'express-form-data';
@@ -13,8 +14,11 @@ app.get('/', (req: Request, res: Response) => { res.send('HI'); });
 
 // Init handlers
 const usersHandler = new UsersHandler();
+const carsHandler = new CarsHandler();
 
 // Define routes
+app.get('/api/cars', carsHandler.getCars);
+
 app.get('/api/users', usersHandler.getUsers);
 app.post(
     '/api/users',
