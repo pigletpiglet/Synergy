@@ -27,7 +27,20 @@ class CarsHandler {
         const payload: CarRequest = req.body;
 
         // Payload validation
+
+
+        const file_location = (req as any)['uploaded_picture'];
+        console.log(file_location);
+        const file_url = await cloudinary.uploader.upload(`storages/${file_location}`, {
+            resource_type: "auto",
+            function(error: any, result: any) { console.log(error, result); }
+        });
+
+        payload.picture = file_url.secure_url;
+
+
         const car: Car = await CarsService.editCar(queryName, payload);
+
 
         const response: DefaultResponse = {
             status: 'OK',
