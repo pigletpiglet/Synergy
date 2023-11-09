@@ -5,6 +5,7 @@ import CarsHandler from './handlers/cars';
 
 // import dotenv from 'dotenv';
 // import formData from 'express-form-data';
+import { v2 as cloudinary } from 'cloudinary';
 
 const app: Application = express();
 const PORT: number = 8081;
@@ -12,12 +13,24 @@ const PORT: number = 8081;
 // routes
 app.get('/', (req: Request, res: Response) => { res.send('HI'); });
 
+const config = cloudinary.config({
+    cloud_name: 'dzbowbs1d',
+    api_key: '584729987837183',
+    api_secret: 'SG6BqXAuoSRoKQeTQScq_X46VTA'
+});
+
 // Init handlers
 const usersHandler = new UsersHandler();
 const carsHandler = new CarsHandler();
 
 // Define routes
 app.get('/api/cars', carsHandler.getCars);
+app.post(
+    '/api/cars',
+    uploadFileUtil.single('picture'),
+    carsHandler.createCar
+);
+
 
 app.get('/api/users', usersHandler.getUsers);
 app.post(

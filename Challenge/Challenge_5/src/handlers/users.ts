@@ -3,6 +3,7 @@ import { DefaultResponse } from '../models/dto/default';
 import { User } from '../models/entity/user';
 import { UserRequest } from '../models/dto/user';
 import UsersService from '../services/users';
+import { v2 as cloudinary } from 'cloudinary';
 
 class UsersHandler {
   async getUsers(req: Request, res: Response) {
@@ -23,7 +24,15 @@ class UsersHandler {
 
   async createUser(req: Request, res: Response) {
     const payload: UserRequest = req.body;
-    payload.profile_picture_url = (req as any)['uploaded_profile_picture_url'];
+
+
+    const file_location = (req as any)['uploaded_profile_picture_url'];
+    const file_url = await cloudinary.uploader.upload(`storages/${file_location}`, {
+      resource_type: "auto",
+      function(error: any, result: any) { console.log(error, result); }
+    });
+
+    payload.profile_picture_url = file_url.secure_url;
 
     // Payload validation
     if (!payload.name) {
