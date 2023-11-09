@@ -25,6 +25,15 @@ const carsHandler = new CarsHandler();
 
 // Define routes
 app.get('/api/cars', carsHandler.getCars);
+app.get('/api/cars/delete', carsHandler.deleteCar);
+
+app.post(
+    '/api/cars/edit',
+    uploadFileUtil.single('picture'),
+    carsHandler.editCar
+);
+
+
 app.post(
     '/api/cars',
     uploadFileUtil.single('picture'),
@@ -32,7 +41,10 @@ app.post(
 );
 
 
+
+
 app.get('/api/users', usersHandler.getUsers);
+
 app.post(
     '/api/users',
     uploadFileUtil.single('profile_picture_url'),

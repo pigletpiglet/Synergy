@@ -22,6 +22,38 @@ class CarsHandler {
 
         res.status(200).send(response);
     }
+    async editCar(req: Request, res: Response) {
+        const queryName: string = req.query.id as string;
+        const payload: CarRequest = req.body;
+
+        // Payload validation
+        const car: Car = await CarsService.editCar(queryName, payload);
+
+        const response: DefaultResponse = {
+            status: 'OK',
+            message: 'Success Edit data',
+            data: {
+                car: car,
+            }
+        };
+
+        res.status(200).send(response);
+    }
+
+
+    async deleteCar(req: Request, res: Response) {
+        const queryName: string = req.query.id as string;
+
+        await CarsService.deleteCar(queryName);
+
+        const response: DefaultResponse = {
+            status: 'OK',
+            message: 'Success delete data',
+            data: {}
+        };
+
+        res.status(200).send(response);
+    }
 
     async createCar(req: Request, res: Response) {
         const payload: CarRequest = req.body;

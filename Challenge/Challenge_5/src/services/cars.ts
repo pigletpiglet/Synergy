@@ -21,6 +21,16 @@ class CarsService {
         return createdCar;
     }
 
+    static async editCar(id: string, car: CarRequest): Promise<Car> {
+        const edittedCar = await CarsRepository.editCar(id, car);
+
+        return edittedCar;
+    }
+
+    static async deleteCar(id: string) {
+        await CarsRepository.deleteCar(id);
+    }
+
 }
 
 export default CarsService;
