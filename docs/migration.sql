@@ -5,19 +5,23 @@ create table users (
 	profile_picture_url text
 )
 
-create table tweets (
+create table cars (
 	id BIGSERIAL primary key,
-	user_id bigint not null,
-	content text not null
+	name varchar(30) not null,
+	price INT not null,
+	size varchar(30) not null,
+	picture text
 )
 
-create table categories (
+create table orders (
 	id BIGSERIAL primary key,
-	name varchar(30) not null
-)
+	email varchar(30) not null,
+	car_id INT,
+	start varchar not null,
+	finish varchar not null,
+	status varchar not null,
+	CONSTRAINT car
+      FOREIGN KEY(car_id) 
+	  REFERENCES cars(id)
 
-create table tweet_categories (
-	id BIGSERIAL primary key,
-	tweet_id bigint not null,
-	category_id bigint not null,
 )
