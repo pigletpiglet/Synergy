@@ -1,13 +1,13 @@
 ## Challenge 5 Synergy
 
 ### Links : 
- - POST api/users/:
+ <!-- - POST api/users/:
    Add Users to the table
    - name : string
    - email : string
    - profile_picture_url : file
  - GET api/users/?name=name : 
-   Fetch users from the table using specific name
+   Fetch users from the table using specific name -->
  
  - POST api/cars/:
    Add Cars to the table

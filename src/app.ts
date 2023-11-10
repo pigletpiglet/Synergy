@@ -30,9 +30,6 @@ app.post(
     carsHandler.createCar
 );
 
-
-
-
 // app.get('/api/users', usersHandler.getUsers);
 
 // app.post(
