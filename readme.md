@@ -27,4 +27,4 @@
    Delete a specific car row using id
 
 ### ERD :
-!<img src="./ERD.svg">
+<img src="./ERD.svg">
