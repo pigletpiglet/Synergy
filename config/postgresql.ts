@@ -1,11 +1,12 @@
-import client from 'pg';
+import knex from 'knex';
 
-const pool = new client.Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'synergy',
-  password: '1234',
-  port: 5432,
+const knexInstance = knex({
+    client: 'postgresql',
+    connection: {
+        user: 'postgres',
+        database: 'synergy',
+        password: '1234',
+    },
 });
 
-export default pool;
+export default knexInstance;

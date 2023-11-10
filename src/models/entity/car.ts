@@ -1,10 +1,20 @@
 // Entity will define the object from database
-interface Car {
+import { Model, ModelObject } from 'objection';
+import knexInstance from '../../../config/postgresql';
+
+export class CarEntity extends Model {
     id?: number;
-    name: string;
-    price: number;
-    size: string;
+    name!: string;
+    price!: number;
+    size!: string;
     picture?: string;
+
+    static get tableName() {
+        return 'cars';
+    }
 }
 
-export { Car };
+Model.knex(knexInstance);
+
+export type Car = ModelObject<CarEntity>;
+

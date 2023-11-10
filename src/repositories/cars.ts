@@ -1,76 +1,65 @@
 import { QueryResult } from 'pg';
-import pool from '../../config/postgresql';
 import { CarRequest } from '../models/dto/car';
-import { Car } from '../models/entity/car';
+import { Car, CarEntity } from '../models/entity/car';
+import { raw } from 'objection';
 
 class CarsRepository {
-    static async getCars(queryName: string): Promise<Car[]> {
-        const getCars = await pool.query(
-            'SELECT id, name, price, size, picture FROM cars WHERE name like $1',
-            [`%${queryName}%`]
-        );
+    static async getCars(queryName: string, querySize: string): Promise<Car[]> {
+        let listCar: Car[] = [];
 
-        const response: Car[] = getCars.rows;
-
-        return response;
-    }
-    static async deleteCar(queryName: string) {
-        await pool.query(
-            'DELETE FROM cars WHERE cars.id = $1',
-            [`%${queryName}%`]
-        );
-    }
-    static async editCar(id: string, car: CarRequest): Promise<Car> {
-
-
-        for (const [key, value] of Object.entries(car)) {
-            console.log(key, value);
-            await pool.query(
-                this.getSQL(key),
-                [value, id]
+        if (queryName && querySize) {
+            listCar = await CarEntity.query().where(
+                raw('lower("name")'),
+                'like',
+                `%${queryName}%`
+            ).where('size',
+                'like',
+                `%${querySize}%`
             );
         }
-        console.log("notRepeat");
-        const getCar = await pool.query(
-            'SELECT id, name, price, size, picture FROM cars WHERE id = $1',
-            [id]
-        );
-        console.log(getCar);
+        else if (queryName) {
+            listCar = await CarEntity.query().where(
+                raw('lower("name")'),
+                'like',
+                `%${queryName}%`
+            );
+        }
+        else if (querySize) {
+            listCar = await CarEntity.query().where('lower("size")',
+                'like',
+                `%${querySize}%`
+            );
+        }
+        else {
+            listCar = await CarEntity.query();
+        }
 
-        const edittedCar: Car = {
-            id: getCar.rows[0].id,
-            name: getCar.rows[0].name,
-            price: getCar.rows[0].price,
-            size: getCar.rows[0].size,
-            picture: getCar.rows[0].picture
-        };
-
-        return edittedCar;
+        return listCar;
     }
-
-    static getSQL(par: string): string {
-        let sql = `UPDATE cars SET `;
-
-        sql = sql + `${par} = $1`
-
-        sql = sql + ' WHERE cars.id = $2 returning *';
-        return sql;
+    static async deleteCar(queryName: string) {
+        if (queryName) {
+            await CarEntity.query().deleteById(queryName);
+        }
     }
-
+    static async editCar(id: string, car: Car) {
+        await CarEntity.query()
+            .findById(id)
+            .patch({
+                name: car.name,
+                picture: car.picture,
+                price: car.price,
+                size: car.size,
+            });
+    }
 
     static async createCar(car: Car): Promise<Car> {
-        const createCar = await pool.query(
-            'INSERT INTO cars (name, price, size, picture) VALUES ($1, $2, $3, $4) returning *',
-            [car.name, car.price, car.size, car.picture]
-        );
 
-        const createdCar: Car = {
-            name: createCar.rows[0].name,
-            price: createCar.rows[0].price,
-            size: createCar.rows[0].size,
-            id: createCar.rows[0].id,
-            picture: createCar.rows[0].picture
-        };
+        const createdCar = await CarEntity.query().insert({
+            name: car.name,
+            picture: car.picture,
+            price: car.price,
+            size: car.size,
+        });
 
         return createdCar;
     }

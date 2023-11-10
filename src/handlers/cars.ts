@@ -8,9 +8,16 @@ import { v2 as cloudinary } from 'cloudinary';
 
 class CarsHandler {
     async getCars(req: Request, res: Response) {
-        const queryName: string = req.query.name as string;
+        let queryName: string = req.query.name as string;
+        let querySize: string = req.query.size as string;
+        if (queryName) {
+            queryName = queryName.toLowerCase()
+        }
+        if (querySize) {
+            querySize = querySize.toLowerCase()
+        }
 
-        const carList: Car[] = await CarsService.getCars(queryName);
+        const carList: Car[] = await CarsService.getCars(queryName, querySize);
 
         const response: DefaultResponse = {
             status: 'OK',
@@ -22,31 +29,22 @@ class CarsHandler {
 
         res.status(200).send(response);
     }
+
     async editCar(req: Request, res: Response) {
         const queryName: string = req.query.id as string;
+
         const payload: CarRequest = req.body;
 
-        // Payload validation
+        payload.picture = req.file;
 
 
-        const file_location = (req as any)['uploaded_picture'];
-        console.log(file_location);
-        const file_url = await cloudinary.uploader.upload(`storages/${file_location}`, {
-            resource_type: "auto",
-            function(error: any, result: any) { console.log(error, result); }
-        });
-
-        payload.picture = file_url.secure_url;
-
-
-        const car: Car = await CarsService.editCar(queryName, payload);
+        await CarsService.editCar(queryName, payload);
 
 
         const response: DefaultResponse = {
             status: 'OK',
             message: 'Success Edit data',
             data: {
-                car: car,
             }
         };
 
@@ -71,14 +69,7 @@ class CarsHandler {
     async createCar(req: Request, res: Response) {
         const payload: CarRequest = req.body;
 
-        const file_location = (req as any)['uploaded_picture'];
-        console.log(file_location);
-        const file_url = await cloudinary.uploader.upload(`storages/${file_location}`, {
-            resource_type: "auto",
-            function(error: any, result: any) { console.log(error, result); }
-        });
-
-        payload.picture = file_url.secure_url;
+        payload.picture = req.file;
 
         // Payload validation
         if (!payload.name) {
