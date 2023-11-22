@@ -1,33 +1,46 @@
-// import pool from '../../config/postgresql';
-// import { User } from '../models/entity/user';
+import { raw } from 'objection';
+import { User, UserEntity } from '../models/entity/user';
 
-// class UsersRepository {
-//   static async getUsers(queryName: string): Promise<User[]> {
-//     const getUsers = await pool.query(
-//       'SELECT id, email, name, profile_picture_url FROM users WHERE name like $1',
-//       [`%${queryName}%`]
-//     );
+class UsersRepository {
+    static async getUsers(queryName: string): Promise<User[]> {
+        let listUser: User[] = [];
 
-//     const response: User[] = getUsers.rows;
+        if (queryName) {
+            listUser = await UserEntity.query().where(
+                raw('lower("name")'),
+                'like',
+                `%${queryName}%`
+            );
+        } else {
+            listUser = await UserEntity.query();
+        }
 
-//     return response;
-//   }
+        return listUser;
+    }
 
-//   static async createUser(user: User): Promise<User> {
-//     const createUser = await pool.query(
-//       'INSERT INTO users (email, name, profile_picture_url) VALUES ($1, $2, $3) returning *',
-//       [user.email, user.name, user.profile_picture_url]
-//     );
+    static async createUser(user: User): Promise<User> {
+        const createdUser = await UserEntity.query().insert({
+            email: user.email,
+            name: user.name,
+            profile_picture_url: user.profile_picture_url,
+            level: user.level,
+            password: user.password,
+        });
 
-//     const createdUser: User = {
-//       id: createUser.rows[0].id,
-//       email: createUser.rows[0].email,
-//       name: createUser.rows[0].name,
-//       profile_picture_url: createUser.rows[0].profile_picture_url,
-//     };
+        return createdUser;
+    }
 
-//     return createdUser;
-//   }
-// }
+    static async getUserByEmail(email: string): Promise<User | null> {
+        const user = await UserEntity.query()
+            .where(raw('lower("email")'), '=', email)
+            .first();
 
-// export default UsersRepository;
+        if (user === undefined) {
+            return null;
+        }
+
+        return user;
+    }
+}
+
+export default UsersRepository;

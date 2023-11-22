@@ -2,6 +2,8 @@ create table users (
 	id BIGSERIAL primary key,
 	email varchar(30) not null,
 	name varchar(30) not null,
+	level varchar(30) not null,
+	password varchar(30) not null,
 	profile_picture_url text
 )
 

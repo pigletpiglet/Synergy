@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { DefaultResponse } from '../models/dto/default';
-import { UserRequest } from '../models/dto/user';
+import { CarRequest } from '../models/dto/car';
 import CarsService from '../services/cars';
 import { Car } from '../models/entity/car';
-import { CarRequest } from '../models/dto/car';
-import { v2 as cloudinary } from 'cloudinary';
 
 class CarsHandler {
     async getCars(req: Request, res: Response) {
@@ -68,7 +66,6 @@ class CarsHandler {
 
     async createCar(req: Request, res: Response) {
         const payload: CarRequest = req.body;
-
         payload.picture = req.file;
 
         // Payload validation
