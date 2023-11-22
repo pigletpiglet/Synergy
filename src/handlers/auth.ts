@@ -103,6 +103,31 @@ class AuthHandler {
         }
     }
 
+    async setAdmin(req: Request, res: Response) {
+        const queryEmail: string = req.query.email as string;
+
+        const upgradedUser = await AuthService.setAdmin(queryEmail);
+
+
+        if (isErrorType(upgradedUser)) {
+            const response: DefaultResponse = {
+                status: 'BAD_REQUEST',
+                message: upgradedUser.message,
+                data: null,
+            };
+
+            res.status(upgradedUser.httpCode).send(response);
+        } else {
+            const response: DefaultResponse = {
+                status: 'OK',
+                message: `User ${queryEmail} is upgraded to Admin status in succesfully`,
+                data: upgradedUser,
+            };
+
+            res.status(200).send(upgradedUser);
+        }
+    }
+
     async getLoggedInUser(req: Request, res: Response) {
         const response: DefaultResponse = {
             status: 'OK',

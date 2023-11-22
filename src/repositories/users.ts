@@ -30,6 +30,19 @@ class UsersRepository {
         return createdUser;
     }
 
+    static async updateUser(user: User): Promise<User> {
+        const createdUser = await UserEntity.query().patchAndFetchById(user.id!, {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            profile_picture_url: user.profile_picture_url,
+            level: user.level,
+            password: user.password,
+        });
+
+        return createdUser;
+    }
+
     static async getUserByEmail(email: string): Promise<User | null> {
         const user = await UserEntity.query()
             .where(raw('lower("email")'), '=', email)

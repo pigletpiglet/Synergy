@@ -97,6 +97,28 @@ class AuthService {
       return errorResponse;
     }
   }
+  static async setAdmin(email: string): Promise<User | ErrorResponse> {
+    try {
+      // Check if email is exist
+      const user = await UsersRepository.getUserByEmail(email);
+
+      if (!user) {
+        throw new Error(`User ${email} is not Found`);
+      }
+      user.level = "Admin";
+      const createdUser = await UsersRepository.updateUser(user);
+
+      return createdUser;
+    } catch (error: any) {
+      // If something is wrong, return the error
+      const errorResponse: ErrorResponse = {
+        httpCode: 400,
+        message: error.message,
+      };
+
+      return errorResponse;
+    }
+  }
 }
 
 export default AuthService;

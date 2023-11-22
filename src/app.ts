@@ -45,15 +45,18 @@ app.post(
 // authentication routes
 app.post('/api/auth/register', authHandler.register);
 app.post('/api/auth/login', authHandler.login);
+app.get('/api/auth/upgrade', AuthMiddleware.authenticateSuper, authHandler.setAdmin);
 app.get('/api/auth/me', AuthMiddleware.authenticate, authHandler.getLoggedInUser);
 
 // cars routes
 app.get('/api/cars', carsHandler.getCars);
-app.get('/api/cars/delete', carsHandler.deleteCar);
+app.get('/api/cars/delete', AuthMiddleware.authenticateAdmin, carsHandler.deleteCar);
 
 app.post(
     '/api/cars/edit',
+
     uploadFileUtil.single('picture'),
+    AuthMiddleware.authenticateAdmin,
     carsHandler.editCar
 );
 
@@ -61,16 +64,10 @@ app.post(
 app.post(
     '/api/cars',
     uploadFileUtil.single('picture'),
+    AuthMiddleware.authenticateAdmin,
     carsHandler.createCar
 );
 
-// app.get('/api/users', usersHandler.getUsers);
-
-// app.post(
-//     '/api/users',
-//     uploadFileUtil.single('profile_picture_url'),
-//     usersHandler.createUser
-// );
 
 app.listen(process.env.APP_PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.APP_PORT}`);
