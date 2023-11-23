@@ -36,9 +36,13 @@ class CarsRepository {
 
         return listCar;
     }
-    static async deleteCar(queryName: string) {
-        if (queryName) {
-            await CarEntity.query().deleteById(queryName);
+    static async deleteCar(queryId: string) {
+        if (queryId) {
+            await CarEntity.query().findById(queryId)
+                .patch({
+                    deleted: true,
+                    updated_at: Date.now()
+                });
         }
     }
     static async editCar(id: string, car: Car) {
@@ -49,6 +53,8 @@ class CarsRepository {
                 picture: car.picture,
                 price: car.price,
                 size: car.size,
+                deleted: car.deleted,
+                updated_at: Date.now()
             });
     }
 
@@ -59,6 +65,8 @@ class CarsRepository {
             picture: car.picture,
             price: car.price,
             size: car.size,
+            deleted: car.deleted,
+            updated_at: car.updated_at
         });
 
         return createdCar;

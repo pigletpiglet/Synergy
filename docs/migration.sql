@@ -12,6 +12,8 @@ create table cars (
 	name varchar(30) not null,
 	price INT not null,
 	size varchar(30) not null,
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	deleted boolean,
 	picture text
 )
 

@@ -54,7 +54,6 @@ app.get('/api/cars/delete', AuthMiddleware.authenticateAdmin, carsHandler.delete
 
 app.post(
     '/api/cars/edit',
-
     uploadFileUtil.single('picture'),
     AuthMiddleware.authenticateAdmin,
     carsHandler.editCar

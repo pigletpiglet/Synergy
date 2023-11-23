@@ -76,3 +76,33 @@ paths:
                       data:
                         allOf:
                           - $ref: '#/components/schemas/UserResponse'
+  /api/auth/upgrade/{id}:
+    get:
+      summary: Upgrade User to Admin Status can only be done by super
+      security:
+        - BearerAuth: []
+      tags:
+        - Auth
+      parameters:
+        - name: id
+          in: path
+          description: 'The user ID to be upgraded. '
+          required: true
+          schema:
+            type: string
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User data
+          content:
+            'application/json':
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Default'
+                  - properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/UserResponse'

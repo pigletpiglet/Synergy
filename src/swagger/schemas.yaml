@@ -46,7 +46,7 @@ components:
               type: string
             password:
               type: string
-            profile_picture_url:
+            level:
               type: string
     UserResponse:
       type: object
@@ -63,4 +63,34 @@ components:
             password:
               type: string
             profile_picture_url:
+              type: string
+    CarRequest:
+      type: object
+      properties:
+        car:
+          type: object
+          properties:
+            name:
+              type: string
+            size:
+              type: string
+            picture:
+              type: file
+            price: 
+              type : integer
+    CarResponse:
+      type: object
+      properties:
+        car:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            price: 
+              type : integer
+            size:
+              type: string
+            picture:
               type: string

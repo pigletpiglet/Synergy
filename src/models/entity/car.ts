@@ -8,6 +8,9 @@ export class CarEntity extends Model {
     price!: number;
     size!: string;
     picture?: string;
+    updated_at!: number;
+    deleted!: boolean;
+
 
     static get tableName() {
         return 'cars';

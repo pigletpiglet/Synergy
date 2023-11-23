@@ -24,6 +24,8 @@ class CarsService {
             name: car.name,
             size: car.size,
             picture: uploadedFile.secure_url,
+            updated_at: Date.now(),
+            deleted: false
         };
         const createdCar = await CarsRepository.createCar(carToCreate);
 
@@ -41,6 +43,8 @@ class CarsService {
             name: car.name,
             size: car.size,
             picture: uploadedFile.secure_url,
+            updated_at: Date.now(),
+            deleted: false
         };
 
         await CarsRepository.editCar(id, carToEdit);

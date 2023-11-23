@@ -3,6 +3,7 @@ interface CarRequest {
     price: number,
     size: string,
     picture?: Express.Multer.File,
+    updatedAt: number,
 }
 
 
