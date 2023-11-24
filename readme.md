@@ -26,5 +26,11 @@
  - GET api/cars/delete?id=id:
    Delete a specific car row using id
 
+   ## Fetch OPEN API dengan menggunakan http://localhost:{Port}/api-docs
+
+   Email dan Password Superadmin : 
+   ##### Email : weno@gmail.com
+   ##### password : 1234
+
 ### ERD :
 <img src="./ERD.svg">
