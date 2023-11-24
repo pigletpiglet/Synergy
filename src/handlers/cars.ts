@@ -32,6 +32,7 @@ class CarsHandler {
         const queryName: string = req.query.id as string;
 
         const payload: CarRequest = req.body;
+        payload.user_id = req.user.id as number;
 
         payload.picture = req.file;
 
@@ -53,7 +54,8 @@ class CarsHandler {
     async deleteCar(req: Request, res: Response) {
         const queryName: string = req.query.id as string;
 
-        await CarsService.deleteCar(queryName);
+        const user_id = req.user.id as number;
+        await CarsService.deleteCar(queryName, user_id);
 
         const response: DefaultResponse = {
             status: 'OK',
@@ -67,6 +69,8 @@ class CarsHandler {
     async createCar(req: Request, res: Response) {
         const payload: CarRequest = req.body;
         payload.picture = req.file;
+        payload.user_id = req.user.id as number;
+
 
         // Payload validation
         if (!payload.name) {

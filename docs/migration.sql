@@ -9,6 +9,7 @@ create table users (
 
 create table cars (
 	id BIGSERIAL primary key,
+	user_id bigint not null,
 	name varchar(30) not null,
 	price INT not null,
 	size varchar(30) not null,

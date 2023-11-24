@@ -19,8 +19,8 @@ class CarsService {
         console.log(uploadedFile.secure_url);
 
         const carToCreate: Car = {
+            user_id: car.user_id,
             price: car.price,
-
             name: car.name,
             size: car.size,
             picture: uploadedFile.secure_url,
@@ -39,6 +39,7 @@ class CarsService {
         const uploadedFile = await cloudinary.uploader.upload(file);
 
         const carToEdit: Car = {
+            user_id: car.user_id,
             price: car.price,
             name: car.name,
             size: car.size,
@@ -51,8 +52,8 @@ class CarsService {
 
     }
 
-    static async deleteCar(id: string) {
-        await CarsRepository.deleteCar(id);
+    static async deleteCar(id: string, user_id: number) {
+        await CarsRepository.deleteCar(id, user_id);
     }
 
 }
