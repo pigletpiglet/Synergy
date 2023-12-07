@@ -1,45 +1,64 @@
+import { useState } from 'react'
+import { Dialog } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+
+
 interface tokenInitialState {
   token: string;
 }
 
 export default function Header() {
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
-    <nav className="flex justify-between">
-      <div className="navbar-brand pe-5" style={{ backgroundColor: "#0D28A6", height: 34, width: "100px" }}>
-      </div>
-      <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-        aria-controls="offcanvasRight">
-        <span className="navbar-toggler-icon"></span>
-      </button>
-      <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto gap-4">
-          <li className="nav-item">
-            <a className="nav-link" href="#main-section" role="button">
-              Our Services
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#why-section" role="button">
-              Why us
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#testimonial-section" role="button">
-              Testimonial
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#faq-section" role="button">
-              FAQ
-            </a>
-          </li>
-          <li className="nav-item">
-            <button type="button" className="btn text-white" style={{ background: "#5CB85F" }}>Register</button>
-          </li>
+    <header className="absolute inset-x-0 top-0 z-50">
+      <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+        <div className="flex lg:flex-1">
+          <a href="#" className="-m-1.5 p-1.5">
+            <span className="sr-only">Your Company</span>
+            <img
+              className="h-8 w-auto"
+              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              alt=""
+            />
+          </a>
+        </div>
+        <div className="flex lg:hidden">
+          <button
+            type="button"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            onClick={() => { }}
+          >
+            <span className="sr-only">Open main menu</span>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
+        <div className="hidden lg:flex lg:gap-x-12">
 
-        </ul>
-      </div>
+          <a key={"ourService"} href={"#"} className="text-sm font-semibold leading-6 py-2 text-gray-900">
+            Our Service
+          </a>
+          <a key={"why"} href={"#"} className="text-sm font-semibold leading-6 py-2 text-gray-900">
+            Why Us
+          </a>
+          <a key={"why"} href={"#"} className="text-sm font-semibold leading-6 py-2 text-gray-900">
+            Testimonial
+          </a>
+          <a key={"why"} href={"#"} className="text-sm font-semibold leading-6 py-2 text-gray-900">
+            FAQ
+          </a>
+          <a key={"why"} href={"#"} className="text-sm font-semibold rounded-sm bg-green-500 p-2 leading-6 text-gray-900">
+            Register
+          </a>
+        </div>
+        {/* <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            Log in <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div> */}
+      </nav>
 
-    </nav >
+    </header>
   );
 }
