@@ -30,7 +30,7 @@
 
    Email dan Password Superadmin : 
    ##### Email : weno@gmail.com
-   ##### password : 1234
+   ##### password : 1234567890
 
 ### ERD :
 <img src="./ERD.svg">
