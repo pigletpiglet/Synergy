@@ -143,7 +143,10 @@ export default function CreateCar() {
             <button
               onClick={async (e) => {
                 e.preventDefault();
-                if (!currentFile) alert('error: Gambar Tidak Boleh Kosong');;
+                if (!currentFile) {
+                  alert('error: Gambar Tidak Boleh Kosong');
+                  return;
+                }
 
                 console.log(!itemId)
                 console.log(itemId)

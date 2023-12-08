@@ -35,6 +35,7 @@ export default function ListCar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
+    const [filter, setFilter] = useState("0");
 
     useEffect(() => {
         const fetchCars = async () => {
@@ -141,10 +142,35 @@ export default function ListCar() {
                             <span className='font-bold'>+ Add New Car</span>
                         </button>
                     </div>
+                    <div className='grid grid-cols-3 px-8 w-[40%]'>
+                        <button
+                            onClick={() => {
+                                setFilter("2")
+                            }}
+                            className={filter == "2" ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 m-auto' : "text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 m-auto"}>
+                            Small
+                        </button>
+                        <button
+                            onClick={() => {
+                                setFilter("4")
+                            }}
+
+                            className={filter == "4" ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 m-auto' : "text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 m-auto"}>
+                            Large
+                        </button>
+                        <button
+                            onClick={() => {
+                                setFilter("0")
+                            }}
+
+                            className={filter == "0" ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 m-auto' : "text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 m-auto"}>
+                            All
+                        </button>
+                    </div>
                     <div className='grid grid-cols-3 px-8 w-[100%]'>
                         {cars.map((car: CarEntity) => (
                             <>
-                                {!car.deleted ? <div className='rounded border border-gray-200 overflow-hidden shadow-lg px-8 py-4 mx-2 my-2'>
+                                {!car.deleted && (filter == "2" ? Number(car.size) <= 4 : filter == "4" ? Number(car.size) >= 4 : true) ? <div className='rounded border border-gray-200 overflow-hidden shadow-lg px-8 py-4 mx-2 my-2'>
                                     <img src={car.picture}>
                                     </img>
                                     <p className='pb-1 text-lg'>

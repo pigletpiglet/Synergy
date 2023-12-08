@@ -15,6 +15,7 @@ interface CarEntity {
     name: string;
     size: string;
     price: number;
+    deleted: boolean;
 
 }
 
@@ -33,8 +34,9 @@ export default function Dashboard() {
         const fetchCars = async () => {
             const response = await fetch(api_base_url + '/api/cars');
             const responseJSON = await response.json();
+            let mobil: CarEntity[] = responseJSON.data.cars;
 
-            setCars(responseJSON.data.cars);
+            setCars(mobil.filter((item) => item.deleted == false));
         };
 
         const checkIsLoggedIn = () => {
@@ -55,6 +57,8 @@ export default function Dashboard() {
 
         checkIsLoggedIn();
         fetchCars();
+
+
     }, []);
 
     return (
@@ -119,7 +123,7 @@ export default function Dashboard() {
             </aside>
             <div className="p-4 sm:ml-64 sm:mt-10">
 
-                <p className='font-bold text-lg px-8 py-4'>
+                <p className='font-bold text-2xl px-8 py-4'>
                     Dashboard
                 </p>
                 <div className="flex flex-col px-8">
