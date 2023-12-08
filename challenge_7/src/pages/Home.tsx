@@ -2,6 +2,9 @@ import { Menu } from '@headlessui/react'
 import Header from '../components/Header';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { saveToken } from '../redux/slices/token';
+import { useNavigate } from 'react-router-dom';
 
 interface UserEntity {
   id: number;
@@ -14,9 +17,30 @@ interface UserEntity {
 
 export default function Home() {
 
-  const tweets_api_base_url = 'http://localhost:8082';
+  const api_base_url = 'http://localhost:8082';
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkIsLoggedIn = () => {
+      const accessToken = localStorage.getItem('access_token');
 
+      // Use if you want to use passing state by props
+      if (accessToken) {
+        setIsLoggedIn(true);
+
+        // TODO:
+        // Save token to redux store
+        dispatch(saveToken(accessToken));
+      } else {
+        setIsLoggedIn(false);
+        navigate('/login');
+      }
+    };
+
+    checkIsLoggedIn();
+  }, []);
 
   return (
     <>
@@ -105,21 +129,6 @@ export default function Home() {
         </div>
 
       </section >
-      <section>
-        <div className='mt-[10px]'>
-          {!tweets.length && <div>Data kosong</div>}
-
-          {tweets &&
-            tweets.map((tweet: TweetEntity) => (
-              <div key={tweet.id} className='mt-3'>
-                <h3>{tweet.content}</h3>
-                <p>
-                  Dibuat oleh <strong>{tweet.user.name}</strong>
-                </p>
-              </div>
-            ))}
-        </div>
-      </section>
 
 
     </>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const tweets_api_base_url = 'http://localhost:8082';
 
-export default function CreateTweet() {
+export default function CreateCar() {
   const navigate = useNavigate();
   const [content, setContent] = useState('');
 

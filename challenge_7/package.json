@@ -1,8 +1,9 @@
 {
   "name": "challenge_7",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "http://localhost:8082/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
