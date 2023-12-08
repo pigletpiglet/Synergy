@@ -1,14 +1,33 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const api_base_url = 'http://localhost:8082';
 
 export default function CreateCar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [name, setName] = useState('');
+  const [itemId, setItemId] = useState('');
   const [price, setPrice] = useState('');
   const [size, setSize] = useState('');
   const [currentFile, setCurrentFile] = useState<File>();
+  const firstUpdate = useRef(true);
+
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      try {
+        setName(location.state.name)
+        setPrice(location.state.price)
+        setSize(location.state.size)
+        setItemId(location.state.id)
+      } catch (error) {
+        return;
+      }
+      return;
+    }
+  })
 
   const selectFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -81,20 +100,23 @@ export default function CreateCar() {
         </div>
       </aside>
       <div className="p-4 sm:ml-64 sm:mt-10">
+        <p className='mb-6 mt-6 font-bold text-2xl'>
+          {!itemId ? "Tambah" : "Edit"} Mobil
+        </p>
         <div className='grid grid-cols-3 px-8 w-[100%]'>
 
           <form>
             <div className="grid gap-6 mb-6 md:grid-cols-1">
               <div>
-                <label htmlFor="first_name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">First name</label>
-                <input onChange={({ target }) => {
+                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">First name</label>
+                <input value={name} onChange={({ target }) => {
                   setName(target.value);
-                }} type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Mobil" required>
+                }} type="text" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Mobil" required>
                 </input>
               </div>
               <div>
                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Price</label>
-                <input onChange={({ target }) => {
+                <input value={price} onChange={({ target }) => {
                   setPrice(target.value);
                 }} type="number" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="5000" required>
                 </input>
@@ -102,7 +124,7 @@ export default function CreateCar() {
 
               <div>
                 <label htmlFor="size" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Size</label>
-                <input onChange={({ target }) => {
+                <input value={size} onChange={({ target }) => {
                   setSize(target.value);
                 }}
                   type="number" id="size" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="2" required>
@@ -121,16 +143,10 @@ export default function CreateCar() {
             <button
               onClick={async (e) => {
                 e.preventDefault();
-                console.log(currentFile?.name);
                 if (!currentFile) alert('error: Gambar Tidak Boleh Kosong');;
 
-                const payload = {
-                  name: name,
-                  price: price,
-                  size: size,
-                  picture: currentFile
-                };
-                console.log(JSON.stringify(payload))
+                console.log(!itemId)
+                console.log(itemId)
                 let formData = new FormData();
                 formData.append('name', name);
                 formData.append('price', price);
@@ -138,7 +154,7 @@ export default function CreateCar() {
                 formData.append('picture', currentFile!);
 
                 const response = await fetch(
-                  api_base_url + '/api/cars',
+                  api_base_url + (!currentFile ? '/api/cars' : ("/api/cars/edit/?id=" + itemId)),
                   {
                     method: 'post',
                     headers: {
@@ -154,7 +170,7 @@ export default function CreateCar() {
                 if (response.status !== 201) {
                   alert('error: ' + responseJson.message);
                 }
-                if (response.status == 201) {
+                if (response.status == 201 || response.status == 200) {
                   navigate('/list');
                 }
                 // If create tweet succeed, redirect to home
