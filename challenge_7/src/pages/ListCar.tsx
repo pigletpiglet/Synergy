@@ -20,6 +20,7 @@ interface CarEntity {
     price: number;
     picture: string;
     updated_at: string;
+    deleted: boolean;
 }
 
 
@@ -143,7 +144,7 @@ export default function ListCar() {
                     <div className='grid grid-cols-3 px-8 w-[100%]'>
                         {cars.map((car: CarEntity) => (
                             <>
-                                <div className='rounded border border-gray-200 overflow-hidden shadow-lg px-8 py-4 mx-2 my-2'>
+                                {!car.deleted ? <div className='rounded border border-gray-200 overflow-hidden shadow-lg px-8 py-4 mx-2 my-2'>
                                     <img src={car.picture}>
                                     </img>
                                     <p className='pb-1 text-lg'>
@@ -179,7 +180,7 @@ export default function ListCar() {
                                             Edit
                                         </button>
                                     </div>
-                                </div>
+                                </div> : null}
 
                             </>
                         ))}
@@ -197,11 +198,16 @@ export default function ListCar() {
                                 className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 m-auto'
                                 color="red"
                                 onClick={async () => {
-                                    setShowModal(false);
-                                    const response = await fetch(api_base_url + '/api/cars/?=id=' + itemId);
+                                    const response = await fetch(api_base_url + '/api/cars/delete/?id=' + itemId, {
+                                        headers: {
+                                            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+                                        },
+                                    });
                                     const responseJSON = await response.json();
                                     let carIndex = cars.findIndex(car => car.id === itemId)
                                     carIndex >= 1 ? cars.splice(carIndex) : null;
+                                    setShowModal(false);
+                                    alert("Succesfuly Deleted")
                                 }}
                             >
                                 <span className='font-bold'>Ya</span>
