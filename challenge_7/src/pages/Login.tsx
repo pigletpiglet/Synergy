@@ -3,11 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 
 const api_base_url = 'http://localhost:8082';
+interface GoogleOauthResponse {
+  credential?: string;
+}
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLoginGoogleSuccess = (response: GoogleOauthResponse) => {
+    console.log('response google success:', response);
+
+    // TODO: integrate with backend to save user google credential
+    // If user is valid, save the token and redirect to home page
+  };
 
 
   return (
@@ -87,6 +97,10 @@ export default function Login() {
             Login
           </button>
         </form>
+        <GoogleOAuthProvider clientId="123659816620-04dnj8n1aqk9sj1aktka339djvtj5mtq.apps.googleusercontent.com" >
+          <GoogleLogin onSuccess={handleLoginGoogleSuccess} />;
+
+        </GoogleOAuthProvider>
       </div>
     </div>
   );
