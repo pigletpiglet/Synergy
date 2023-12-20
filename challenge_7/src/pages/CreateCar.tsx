@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const api_base_url = 'http://localhost:8082';
@@ -150,7 +150,7 @@ export default function CreateCar() {
 
                 console.log(!itemId)
                 console.log(itemId)
-                let formData = new FormData();
+                const formData = new FormData();
                 formData.append('name', name);
                 formData.append('price', price);
                 formData.append('size', size);

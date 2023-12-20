@@ -3,12 +3,6 @@ import { useEffect, useState } from 'react';
 import { saveToken } from '../redux/slices/token';
 import { useNavigate } from 'react-router-dom';
 
-interface UserEntity {
-    id: number;
-    name: string;
-    email: string;
-    profile_picture_url: string;
-}
 
 interface CarEntity {
     id: number;
@@ -26,7 +20,7 @@ export default function Dashboard() {
     const [cars, setCars] = useState<CarEntity[]>([]);
 
     const api_base_url = 'http://localhost:8082';
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [, setIsLoggedIn] = useState<boolean>(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -34,7 +28,7 @@ export default function Dashboard() {
         const fetchCars = async () => {
             const response = await fetch(api_base_url + '/api/cars');
             const responseJSON = await response.json();
-            let mobil: CarEntity[] = responseJSON.data.cars;
+            const mobil: CarEntity[] = responseJSON.data.cars;
 
             setCars(mobil.filter((item) => item.deleted == false));
         };
