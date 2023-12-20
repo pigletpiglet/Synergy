@@ -4,13 +4,20 @@ import { User } from '../models/entity/user';
 import UsersRepository from '../repositories/users';
 
 class UsersService {
-    static async getUsers(queryName: string): Promise<User[]> {
-        const listUser = await UsersRepository.getUsers(queryName);
+
+    _usersRepository: UsersRepository;
+
+    constructor(usersRepository: UsersRepository) {
+        this._usersRepository = usersRepository;
+    }
+
+    async getUsers(queryName: string): Promise<User[]> {
+        const listUser = await this._usersRepository.getUsers(queryName);
 
         return listUser;
     }
 
-    static async createUser(user: UserRequest): Promise<User> {
+    async createUser(user: UserRequest): Promise<User> {
         try {
             const fileBase64 = user.profile_picture_file?.buffer.toString('base64');
             const file = `data:${user.profile_picture_file?.mimetype};base64,${fileBase64}`;
@@ -25,7 +32,7 @@ class UsersService {
                 profile_picture_url: uploadedFile.url,
             };
 
-            const createdUser = await UsersRepository.createUser(userToCreate);
+            const createdUser = await this._usersRepository.createUser(userToCreate);
 
             return createdUser;
         } catch (error) {

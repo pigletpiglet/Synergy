@@ -5,6 +5,20 @@ import CarsService from '../services/cars';
 import { Car } from '../models/entity/car';
 
 class CarsHandler {
+
+    _carsService: CarsService;
+
+    constructor(carsService: CarsService) {
+        this._carsService = carsService;
+
+        // Bind methods, so they can access the properties
+        this.getCars = this.getCars.bind(this);
+        this.editCar = this.editCar.bind(this);
+        this.deleteCar = this.deleteCar.bind(this);
+        this.createCar = this.createCar.bind(this);
+    }
+
+
     async getCars(req: Request, res: Response) {
         let queryName: string = req.query.name as string;
         let querySize: string = req.query.size as string;
@@ -15,7 +29,7 @@ class CarsHandler {
             querySize = querySize.toLowerCase()
         }
 
-        const carList: Car[] = await CarsService.getCars(queryName, querySize);
+        const carList: Car[] = await this._carsService.getCars(queryName, querySize);
 
         const response: DefaultResponse = {
             status: 'OK',
@@ -37,7 +51,7 @@ class CarsHandler {
         payload.picture = req.file;
 
 
-        await CarsService.editCar(queryName, payload);
+        await this._carsService.editCar(queryName, payload);
 
 
         const response: DefaultResponse = {
@@ -55,7 +69,7 @@ class CarsHandler {
         const queryName: string = req.query.id as string;
 
         const user_id = req.user.id as number;
-        await CarsService.deleteCar(queryName, user_id);
+        await this._carsService.deleteCar(queryName, user_id);
 
         const response: DefaultResponse = {
             status: 'OK',
@@ -107,7 +121,7 @@ class CarsHandler {
             res.status(400).send(response);
         }
 
-        const createdCar: Car = await CarsService.createCar(payload);
+        const createdCar: Car = await this._carsService.createCar(payload);
 
         const response: DefaultResponse = {
             status: 'CREATED',

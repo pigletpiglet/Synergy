@@ -5,34 +5,46 @@ import CarsRepository from '../repositories/cars';
 import cloudinary from '../../config/cloudinary';
 
 class CarsService {
-    static async getCars(queryName: string, querySize: string): Promise<Car[]> {
-        const listCar = await CarsRepository.getCars(queryName, querySize);
+
+    _carsRepository: CarsRepository;
+
+    constructor(carsRepository: CarsRepository) {
+        this._carsRepository = carsRepository;
+    }
+
+
+    async getCars(queryName: string, querySize: string): Promise<Car[]> {
+        const listCar = await this._carsRepository.getCars(queryName, querySize);
 
         return listCar;
     }
-    static async createCar(car: CarRequest): Promise<Car> {
-        const fileBase64 = car.picture?.buffer.toString('base64');
-        const file = `data:${car.picture?.mimetype};base64,${fileBase64}`;
+    async createCar(car: CarRequest): Promise<Car> {
+        var uploadedFile;
+        if (car.picture) {
+            const fileBase64 = car.picture?.buffer.toString('base64');
+            const file = `data:${car.picture?.mimetype};base64,${fileBase64}`;
+            uploadedFile = await cloudinary.uploader.upload(file);
+            console.log(uploadedFile.secure_url);
+        }
 
-        const uploadedFile = await cloudinary.uploader.upload(file);
-
-        console.log(uploadedFile.secure_url);
 
         const carToCreate: Car = {
             user_id: car.user_id,
             price: car.price,
             name: car.name,
             size: car.size,
-            picture: uploadedFile.secure_url,
+            picture: uploadedFile?.secure_url ?? "",
             updated_at: Date.now(),
             deleted: false
         };
-        const createdCar = await CarsRepository.createCar(carToCreate);
+        const createdCar = await this._carsRepository.createCar(carToCreate);
+        console.log(createdCar);
 
         return createdCar;
     }
 
-    static async editCar(id: string, car: CarRequest) {
+    async editCar(id: string, car: CarRequest) {
+
         const fileBase64 = car.picture?.buffer.toString('base64');
         const file = `data:${car.picture?.mimetype};base64,${fileBase64}`;
 
@@ -48,12 +60,13 @@ class CarsService {
             deleted: false
         };
 
-        await CarsRepository.editCar(id, carToEdit);
+        await this._carsRepository.editCar(id, carToEdit);
 
     }
 
-    static async deleteCar(id: string, user_id: number) {
-        await CarsRepository.deleteCar(id, user_id);
+    async deleteCar(id: string, user_id: number) {
+
+        await this._carsRepository.deleteCar(id, user_id);
     }
 
 }

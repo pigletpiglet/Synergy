@@ -4,7 +4,10 @@ import { Car, CarEntity } from '../models/entity/car';
 import { raw } from 'objection';
 
 class CarsRepository {
-    static async getCars(queryName: string, querySize: string): Promise<Car[]> {
+
+    constructor() { }
+
+    async getCars(queryName: string, querySize: string): Promise<Car[]> {
         let listCar: Car[] = [];
 
         if (queryName && querySize) {
@@ -36,7 +39,7 @@ class CarsRepository {
 
         return listCar;
     }
-    static async deleteCar(queryId: string, user_id: number) {
+    async deleteCar(queryId: string, user_id: number) {
         if (queryId) {
             await CarEntity.query().findById(queryId)
                 .patch({
@@ -46,7 +49,7 @@ class CarsRepository {
                 });
         }
     }
-    static async editCar(id: string, car: Car) {
+    async editCar(id: string, car: Car) {
         await CarEntity.query()
             .findById(id)
             .patch({
@@ -60,7 +63,7 @@ class CarsRepository {
             });
     }
 
-    static async createCar(car: Car): Promise<Car> {
+    async createCar(car: Car): Promise<Car> {
 
         const createdCar = await CarEntity.query().insert({
             name: car.name,

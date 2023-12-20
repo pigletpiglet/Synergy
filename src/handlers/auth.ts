@@ -6,9 +6,22 @@ import { isErrorType } from '../utils/checker';
 import formData from 'express-form-data';
 
 class AuthHandler {
+
+    _authService: AuthService;
+
+    constructor(authService: AuthService) {
+        this._authService = authService;
+
+        // Bind methods, so they can access the properties
+        this.login = this.login.bind(this);
+        this.register = this.register.bind(this);
+        this.setAdmin = this.setAdmin.bind(this);
+    }
+
+
     async login(req: Request, res: Response) {
         const payload: LoginRequest = await req.body;
-        const loginResponse = await AuthService.login(payload);
+        const loginResponse = await this._authService.login(payload);
 
         if (isErrorType(loginResponse)) {
             const response: DefaultResponse = {
@@ -80,7 +93,7 @@ class AuthHandler {
             res.status(400).send(response);
         }
 
-        const registeredUser = await AuthService.register(payload);
+        const registeredUser = await this._authService.register(payload);
 
         if (isErrorType(registeredUser)) {
             const response: DefaultResponse = {
@@ -106,7 +119,7 @@ class AuthHandler {
     async setAdmin(req: Request, res: Response) {
         const queryEmail: string = req.query.email as string;
 
-        const upgradedUser = await AuthService.setAdmin(queryEmail);
+        const upgradedUser = await this._authService.setAdmin(queryEmail);
 
 
         if (isErrorType(upgradedUser)) {

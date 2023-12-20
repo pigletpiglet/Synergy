@@ -9,7 +9,15 @@ import jwt from 'jsonwebtoken';
 const SALT_ROUND = 10;
 
 class AuthService {
-  static async login(req: LoginRequest): Promise<Auth | ErrorResponse> {
+
+  _usersRepository: UsersRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this._usersRepository = usersRepository;
+  }
+
+
+  async login(req: LoginRequest): Promise<Auth | ErrorResponse> {
     try {
       // Validate fields existence
       if (!req.email) throw new Error('email cannot be empty');
@@ -18,7 +26,7 @@ class AuthService {
         throw new Error('password length should be more than 8');
 
       // Check if email is exist
-      const user = await UsersRepository.getUserByEmail(req.email);
+      const user = await this._usersRepository.getUserByEmail(req.email);
 
       if (!user) {
         throw new Error("user doesn't exist");
@@ -64,10 +72,10 @@ class AuthService {
     }
   }
 
-  static async register(req: RegisterRequest): Promise<User | ErrorResponse> {
+  async register(req: RegisterRequest): Promise<User | ErrorResponse> {
     try {
       // Check if email is exist
-      const user = await UsersRepository.getUserByEmail(req.email);
+      const user = await this._usersRepository.getUserByEmail(req.email);
       if (user) {
         throw new Error('user with the same email already exist');
       }
@@ -84,7 +92,7 @@ class AuthService {
         profile_picture_url: req.profile_picture_url,
       };
 
-      const createdUser = await UsersRepository.createUser(userToCreate);
+      const createdUser = await this._usersRepository.createUser(userToCreate);
 
       return createdUser;
     } catch (error: any) {
@@ -97,16 +105,16 @@ class AuthService {
       return errorResponse;
     }
   }
-  static async setAdmin(email: string): Promise<User | ErrorResponse> {
+  async setAdmin(email: string): Promise<User | ErrorResponse> {
     try {
       // Check if email is exist
-      const user = await UsersRepository.getUserByEmail(email);
+      const user = await this._usersRepository.getUserByEmail(email);
 
       if (!user) {
         throw new Error(`User ${email} is not Found`);
       }
       user.level = "Admin";
-      const createdUser = await UsersRepository.updateUser(user);
+      const createdUser = await this._usersRepository.updateUser(user);
 
       return createdUser;
     } catch (error: any) {

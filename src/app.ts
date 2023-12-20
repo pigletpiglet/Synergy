@@ -5,6 +5,7 @@ import UsersHandler from './handlers/users';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { swaggerConfig } from './utils/swaggerOption';
+import cors from 'cors';
 
 import dotenv from 'dotenv';
 import AuthHandler from './handlers/auth';
@@ -13,6 +14,7 @@ dotenv.config();
 
 // import formData from 'express-form-data';
 const app: Application = express();
+
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
@@ -31,6 +33,7 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+app.use(cors());
 
 app.use(express.json());
 
@@ -85,7 +88,4 @@ app.post(
     carsHandler.createCar
 );
 
-
-app.listen(process.env.APP_PORT, () => {
-    console.log(`Server is running on http://localhost:${process.env.APP_PORT}`);
-});
+export default app;

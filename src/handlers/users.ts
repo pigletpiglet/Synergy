@@ -5,6 +5,18 @@ import { UserRequest } from '../models/dto/user';
 import UsersService from '../services/users';
 
 class UsersHandler {
+
+    _usersService: UsersService;
+
+    constructor(UuersService: UsersService) {
+        this._usersService = usersService;
+
+        // Bind methods, so they can access the properties
+        this.getUsers = this.getUsers.bind(this);
+        this.createUser = this.createUser.bind(this);
+    }
+
+
     async getUsers(req: Request, res: Response) {
         const queryName: string = req.query.name as string;
 
