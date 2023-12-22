@@ -10,6 +10,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import AuthHandler from './handlers/auth';
 import AuthMiddleware from './middlewares/auth';
+import UsersService from './services/users';
+import UsersRepository from './repositories/users';
+import CarsRepository from './repositories/cars';
+import AuthService from './services/auth';
+import CarsService from './services/cars';
 dotenv.config();
 
 // import formData from 'express-form-data';
@@ -36,11 +41,20 @@ app.use(function (req, res, next) {
 app.use(cors());
 
 app.use(express.json());
+// init Repo
+const usersRepository = new UsersRepository();
+const carsRepository = new CarsRepository();
+
+// init Service
+const usersService = new UsersService(usersRepository);
+const authService = new AuthService(usersRepository);
+const carsService = new CarsService(carsRepository);
+
 
 // Init handlers
-const usersHandler = new UsersHandler();
-const carsHandler = new CarsHandler();
-const authHandler = new AuthHandler();
+const usersHandler = new UsersHandler(usersService);
+const carsHandler = new CarsHandler(carsService);
+const authHandler = new AuthHandler(authService);
 
 //swagger
 const swaggerSpec = swaggerJsdoc(swaggerConfig);

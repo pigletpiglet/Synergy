@@ -1,52 +1,63 @@
 import { LoginRequest, RegisterRequest } from '../../models/dto/auth';
+import { User } from '../../models/entity/user';
 import UsersRepository from '../../repositories/users';
+import { isErrorType } from '../../utils/checker';
 import AuthService from '../auth';
+import bcrypt from 'bcrypt';
 
 describe('login', () => {
   it('should return JWT Token', async () => {
-    const expectedCarResponse = {
+    const loginRequest: LoginRequest = {
+      email: "weno@gmail.com",
+      password: "12345678"
     };
 
     /** creating dependency of use case */
     const mockUsersRepository = new UsersRepository();
 
     /** mocking needed function */
-    mockUsersRepository.getCars = jest
+    mockUsersRepository.getUserByEmail = jest
       .fn()
-      .mockImplementation(() => Promise.resolve([expectedCarResponse]));
+      .mockImplementation(() => Promise.resolve(loginRequest.email));
 
     const authService = new AuthService(mockUsersRepository);
 
-    const generatedCar = await authService.login("bola",);
-    expect(generatedCar[0].id).toEqual(expectedCarResponse.id);
-    expect(generatedCar[0].name).toEqual(expectedCarResponse.name);
+    const loginResponse = await authService.login(loginRequest);
+    if (isErrorType(loginResponse)) {
+    } else {
+      expect(loginResponse.access_token).not.toBeNaN();
+    }
   });
 });
 
-describe('createCar', () => {
+describe('register', () => {
 
   it('should return correct car data', async () => {
-    const expectedCarResponse: CarRequest = {
-      name: 'Mobil_Testing_2',
-      price: 2000,
-      size: "2",
-      user_id: 5,
-      updatedAt: Date.now()
+    const registerRequest: RegisterRequest = {
+      email: "weno@gmail.com",
+      password: "12345678",
+      name: "",
+      profile_picture_url: "",
     };
+    const SALT_ROUND = 10;
+
+    const encryptedPassword = bcrypt.hashSync(registerRequest.password, SALT_ROUND);
 
     /** creating dependency of use case */
-    const mockCarsRepository = new CarsRepository();
+    const mockUsersRepository = new UsersRepository();
 
-    /** mocking needed function */
-    mockCarsRepository.createCar = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(expectedCarResponse));
+    const userToCreate: User = {
+      email: registerRequest.email,
+      name: registerRequest.name,
+      level: "Normal",
+      password: encryptedPassword,
+      profile_picture_url: registerRequest.profile_picture_url,
+    };
 
-    const carsService = new CarsService(mockCarsRepository);
+    const createdUser = await mockUsersRepository.createUser(userToCreate);
 
-    const car = await carsService.createCar(expectedCarResponse);
-
-    expect(car.name).toEqual(expectedCarResponse.name);
+    expect(createdUser.password).toEqual(encryptedPassword);
+    expect(createdUser.email).toEqual(registerRequest.email);
   });
 });
 

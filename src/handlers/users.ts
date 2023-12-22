@@ -8,7 +8,7 @@ class UsersHandler {
 
     _usersService: UsersService;
 
-    constructor(UuersService: UsersService) {
+    constructor(usersService: UsersService) {
         this._usersService = usersService;
 
         // Bind methods, so they can access the properties
@@ -20,7 +20,7 @@ class UsersHandler {
     async getUsers(req: Request, res: Response) {
         const queryName: string = req.query.name as string;
 
-        const userList: User[] = await UsersService.getUsers(queryName);
+        const userList: User[] = await this._usersService.getUsers(queryName);
 
         const response: DefaultResponse = {
             status: 'OK',
@@ -57,7 +57,7 @@ class UsersHandler {
             res.status(400).send(response);
         }
 
-        const createdUser: User = await UsersService.createUser(payload);
+        const createdUser: User = await this._usersService.createUser(payload);
 
         const response: DefaultResponse = {
             status: 'CREATED',

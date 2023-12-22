@@ -6,6 +6,9 @@ import { TokenPayload } from '../models/entity/auth';
 class AuthMiddleware {
 
   static async authenticate(req: Request, res: Response, next: NextFunction) {
+    const usersRepository = new UsersRepository();
+
+
     // Decode token & validate token
     // Get token from authorization header
     const authHeader = req.get('Authorization');
@@ -26,7 +29,7 @@ class AuthMiddleware {
 
       const payload = jwt.verify(accessToken, jwtSecret) as TokenPayload;
 
-      const user = await UsersRepository.getUserByEmail(payload.email);
+      const user = await usersRepository.getUserByEmail(payload.email);
 
       if (!user)
         return res.status(401).send({
@@ -49,6 +52,8 @@ class AuthMiddleware {
   static async authenticateAdmin(req: Request, res: Response, next: NextFunction) {
     // Decode token & validate token
     // Get token from authorization header
+    const usersRepository = new UsersRepository();
+
     const authHeader = req.get('Authorization');
 
     let accessToken: string;
@@ -67,7 +72,7 @@ class AuthMiddleware {
 
       const payload = jwt.verify(accessToken, jwtSecret) as TokenPayload;
 
-      const user = await UsersRepository.getUserByEmail(payload.email);
+      const user = await usersRepository.getUserByEmail(payload.email);
 
       if (!user)
         return res.status(401).send({
@@ -96,6 +101,8 @@ class AuthMiddleware {
     }
   }
   static async authenticateSuper(req: Request, res: Response, next: NextFunction) {
+    const usersRepository = new UsersRepository();
+
     // Decode token & validate token
     // Get token from authorization header
     const authHeader = req.get('Authorization');
@@ -116,7 +123,7 @@ class AuthMiddleware {
 
       const payload = jwt.verify(accessToken, jwtSecret) as TokenPayload;
 
-      const user = await UsersRepository.getUserByEmail(payload.email);
+      const user = await usersRepository.getUserByEmail(payload.email);
 
       if (!user)
         return res.status(401).send({
