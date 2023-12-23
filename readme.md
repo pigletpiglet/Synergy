@@ -32,5 +32,11 @@
    ##### Email : weno@gmail.com
    ##### password : 1234567890
 
+  # Deployed on : 
+  ## Back End : https://synergychallenge8be-production.up.railway.app/
+  ## Front End : https://synergy-challenge8-fe.vercel.app
+  
+
+
 ### ERD :
 <img src="./ERD.svg">
