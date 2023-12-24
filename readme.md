@@ -1,4 +1,4 @@
-## Challenge 5 Synergy
+## Challenge 8 Synergy
 
 ### Links : 
  <!-- - POST api/users/:
